@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Player</title>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.7/plyr.css">
 </head>
 <body>
-    <h1>Video Player</h1>
-
-    <video controls>
-        <video width="640" height="360" controls>
-        <source src="Movies/example.mkv" type="video/mp4">
+    <video controls crossorigin playsinline poster="path/to/poster.jpg" id="player">
+        <source src="movies/example.mkv" type="video/x-matroska">
+        Your browser does not support the video tag.
     </video>
+
+    <script src="https://cdn.plyr.io/3.6.7/plyr.js"></script>
+    <script>const player = new Plyr('#player');</script>
 </body>
 </html>

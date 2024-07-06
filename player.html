@@ -5,53 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Player</title>
     <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Jockey+One&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #1c1c1c;
             color: white;
             font-family: 'Jockey One', sans-serif;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
         .title {
             font-size: 24px;
             color: #6e44ff;
             text-align: center;
-        }
-        #player {
-            margin-top: 20px;
-        }
-        .audio-tracks {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .audio-tracks button {
-            margin-right: 10px;
-            background-color: #6e44ff;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-        }
-        .audio-tracks button.active {
-            background-color: #1c1c1c;
-            border: 2px solid #6e44ff;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div>
         <div class="title">Movie Player</div>
         <video id="player" class="video-js vjs-default-skin" controls preload="auto" width="800" height="450">
             <source id="movieSource" type="video/mp4" />
         </video>
-        <div class="audio-tracks" id="audio-tracks">
-            <!-- Audio track buttons will be inserted here -->
-        </div>
     </div>
 
     <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
@@ -62,49 +40,6 @@
         movieSource.src = movieUrl;
 
         const player = videojs('player');
-
-        player.ready(function() {
-            const audioTracks = player.audioTracks();
-            const audioTracksContainer = document.getElementById('audio-tracks');
-
-            if (audioTracks.length > 0) {
-                // Add buttons to switch between audio tracks
-                for (let i = 0; i < audioTracks.length; i++) {
-                    const track = audioTracks[i];
-                    const button = document.createElement('button');
-                    button.innerText = track.label || `Track ${i + 1}`;
-                    button.classList.toggle('active', track.enabled);
-
-                    button.addEventListener('click', function() {
-                        // Disable all tracks
-                        for (let j = 0; j < audioTracks.length; j++) {
-                            audioTracks[j].enabled = false;
-                        }
-                        // Enable the selected track
-                        track.enabled = true;
-
-                        // Update button states
-                        const buttons = audioTracksContainer.querySelectorAll('button');
-                        buttons.forEach(btn => btn.classList.remove('active'));
-                        button.classList.add('active');
-                    });
-
-                    audioTracksContainer.appendChild(button);
-                }
-
-                // Listen for an audio track becoming enabled
-                audioTracks.addEventListener('change', function() {
-                    for (let i = 0; i < audioTracks.length; i++) {
-                        const track = audioTracks[i];
-                        if (track.enabled) {
-                            console.log(`Audio track changed to: ${track.label || `Track ${i + 1}`}`);
-                        }
-                    }
-                });
-            } else {
-                audioTracksContainer.innerHTML = '<p>No audio tracks available.</p>';
-            }
-        });
     </script>
 </body>
 </html>

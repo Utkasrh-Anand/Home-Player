@@ -54,6 +54,13 @@
                     player.pause();
                 }
                 event.preventDefault(); // Prevents the default action of the space bar
+            } else if (event.key === 'Enter') {
+                if (player.paused()) {
+                    player.play();
+                } else {
+                    player.pause();
+                }
+                event.preventDefault(); // Prevents the default action of the space bar
             }
         });
     </script>

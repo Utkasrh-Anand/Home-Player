@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Player</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jockey+One&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1c1c1c;
+            color: white;
+            font-family: 'Jockey One', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 24px;
+            color: #6e44ff;
+            margin: 0;
+        }
+        .search-container {
+            flex-grow: 1;
+            text-align: center;
+        }
+        .search-box {
+            width: 100%;
+            max-width: 300px;
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+        }
+        .movie-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .movie-list li {
+            padding: 10px;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+        }
+        .movie-list li:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">HOME-PLAYER</div>
+            <div class="search-container">
+                <input type="text" id="search-box" class="search-box" placeholder="Search..." onkeyup="filterMovies()">
+            </div>
+        </div>
+        <ul class="movie-list" id="movie-list"></ul>
+    </div>
+
+    <script>
+        async function loadMovies() {
+            const response = await fetch('movies.json');
+            const movies = await response.json();
+            const movieList = document.getElementById('movie-list');
+            
+            movies.forEach(movie => {
+                const li = document.createElement('li');
+                li.textContent = movie.name;
+                li.dataset.link = movie.link;
+                li.onclick = () => playMovie(movie.link);
+                movieList.appendChild(li);
+            });
+        }
+
+        function playMovie(movieUrl) {
+            window.location.href = 'player.html?movieUrl=' + encodeURIComponent(movieUrl);
+        }
+
+        function filterMovies() {
+            const searchInput = document.getElementById('search-box').value.toLowerCase();
+            const movieList = document.getElementById('movie-list');
+            const movies = movieList.getElementsByTagName('li');
+            
+            for (let i = 0; i < movies.length; i++) {
+                const movie = movies[i];
+                const movieName = movie.textContent.toLowerCase();
+                
+                if (movieName.indexOf(searchInput) > -1) {
+                    movie.style.display = '';
+                } else {
+                    movie.style.display = 'none';
+                }
+            }
+        }
+
+        window.onload = loadMovies;
+    </script>
+</body>
+</html>

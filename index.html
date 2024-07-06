@@ -137,38 +137,15 @@
                 const li = document.createElement('li');
                 li.textContent = movie.name;
                 li.dataset.link = movie.link;
-                li.dataset.type = movie.type; // Store the type in dataset for later use
-                li.onclick = () => playMovie(movie.link, movie.type);
+                li.onclick = () => playMovie(movie.link);
                 movieList.appendChild(li);
             });
         }
 
         // Function to play a selected movie
-        function playMovie(movieUrl, type) {
-            let appendedText = '';
-
-            // Determine appended text based on type
-            switch (type) {
-                case 'driveleech':
-                    appendedText = 'https://driveleech.org/zfile/';
-                    break;
-                case 'driveseed':
-                    appendedText = 'https://driveseed.org/zfile/'; // Replace with your driveseed appended text
-                    break;
-                case 'gdflix':
-                    appendedText = 'https://new2.gdflix.cfd/zfile/'; // Replace with your gdflix appended text
-                    break;
-                case 'gofile':
-                    appendedText = 'https://gofile.io/d/'; // Replace with your gofile appended text
-                    break;
-                default:
-                    appendedText = ''; // Default if no type matches
-                    break;
-            }
-
-            window.location.href = appendedText + movieUrl;
+        function playMovie(movieUrl) {
+            window.location.href = 'player.html?movieUrl=' + encodeURIComponent(movieUrl);
         }
-
 
         // Function to filter movies based on search input
         function filterMovies() {

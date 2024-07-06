@@ -20,7 +20,6 @@
             text-align: center;
             font-family: 'Jockey One', sans-serif;
             margin-bottom: 20px;
-            font-family: 'Jockey One', sans-serif;
             font-size: 36px;
             color: #BB86FC;
         }
@@ -42,6 +41,21 @@
         movieSource.src = movieUrl;
 
         const player = videojs('player');
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight') {
+                player.currentTime(player.currentTime() - 15);
+            } else if (event.key === 'ArrowLeft') {
+                player.currentTime(player.currentTime() + 15);
+            } else if (event.key === ' ') {
+                if (player.paused()) {
+                    player.play();
+                } else {
+                    player.pause();
+                }
+                event.preventDefault(); // Prevents the default action of the space bar
+            }
+        });
     </script>
 </body>
 </html>

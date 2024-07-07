@@ -3,41 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fetch Source Code</title>
+    <title>Home Player</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jockey+One&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        #sourceCode {
-            white-space: pre-wrap;
-            background-color: #f4f4f4;
-            padding: 10px;
-            border: 1px solid #ddd;
-            margin-top: 20px;
-            overflow-x: auto;
-            max-width: 100%;
+        /* Basic styling for the body */
+        body {
+            background-color: #121212;
+            color: #FFFFFF;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
         }
+
+        /* Styling for the header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #1F1F1F;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        /* Styling for the title */
+        .title {
+            font-family: 'Jockey One', sans-serif;
+            font-size: 36px;
+            color: #BB86FC;
+            margin: 0;
+        }
+
+        /* Styling for the search container */
+        .search-container {
+            flex-grow: 1;
+            text-align: right;
+        }
+
+        /* Styling for the search box */
+        .search-box {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px 15px;
+            border-radius: 25px;
+            border: none;
+            outline: none;
+            background-color: #2D2D2D;
+            color: #FFFFFF;
+            font-size: 16px;
+        }
+
+        /* Container for the movie list */
+        .movie-list-container {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+            overflow-y: auto;
+            padding: 20px 30px;
+            padding-top: 30px;
+            height: calc(100% - 80px);
+        }
+
+        /* Styling for the movie list */
+        .movie-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Styling for each movie item */
+        .movie-list li {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #1F1F1F;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Jockey One', sans-serif;
+            font-size: 30px;
+            transition: background-color 0.3s;
+        }
+
+        /* Hover effect for each movie item */
+        .movie-list li:hover {
+            background-color: #BB86FC;
+        }
+
+        @media (max-width: 550px) {
+            .title {
+                font-size: 24px;
+            }
+
+            .movie-list li {
+                font-size: 16px;
+            }
+            .search-box {
+                width: 60%;
+                max-width: none;
+            }
+        }
+
+        
     </style>
 </head>
 <body>
-    <h1>Fetch Source Code</h1>
-    <input type="text" id="urlInput" placeholder="Enter URL" style="width: 300px;">
-    <button onclick="fetchSourceCode()">Fetch Source Code</button>
-    <pre id="sourceCode"></pre>
+    <div class="header">
+        <div class="title">HOME-PLAYER</div>
+        <div class="search-container">
+            <input type="text" id="search-box" class="search-box" placeholder="Search..." onkeyup="filterMovies()">
+        </div>
+    </div>
+    <div class="movie-list-container">
+        <ul class="movie-list" id="movie-list"></ul>
+    </div>
 
     <script>
-        async function fetchSourceCode() {
-            const url = document.getElementById('urlInput').value;
-            if (!url) {
-                alert("Please enter a URL.");
-                return;
-            }
+        // Function to load movies from a JSON file
+        async function loadMovies() {
+            const response = await fetch('movies.json');
+            const movies = await response.json();
+            const movieList = document.getElementById('movie-list');
 
-            try {
-                const response = await fetch(url);
-                const text = await response.text();
-                document.getElementById('sourceCode').textContent = text;
-            } catch (error) {
-                document.getElementById('sourceCode').textContent = `Error fetching source code: ${error.message}`;
+            // Sort the movies alphabetically by name
+            movies.sort((a, b) => a.name.localeCompare(b.name));
+
+            // Create a list item for each movie
+            movies.forEach(movie => {
+                const li = document.createElement('li');
+                li.textContent = movie.name;
+                li.dataset.link = movie.link;
+                li.onclick = () => playMovie(movie.link);
+                movieList.appendChild(li);
+            });
+        }
+
+        // Function to play a selected movie
+        function playMovie(movieUrl) {
+            window.location.href = 'player.html?movieUrl=' + encodeURIComponent(movieUrl);
+        }
+
+        // Function to filter movies based on search input
+        function filterMovies() {
+            const searchInput = document.getElementById('search-box').value.toLowerCase();
+            const movieList = document.getElementById('movie-list');
+            const movies = movieList.getElementsByTagName('li');
+
+            // Loop through all movie items and hide those that don't match the search query
+            for (let i = 0; i < movies.length; i++) {
+                const movie = movies[i];
+                const movieName = movie.textContent.toLowerCase();
+
+                if (movieName.indexOf(searchInput) > -1) {
+                    movie.style.display = '';
+                } else {
+                    movie.style.display = 'none';
+                }
             }
         }
+
+        // Load movies when the window loads
+        window.onload = loadMovies;
     </script>
 </body>
 </html>
